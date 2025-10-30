@@ -32,6 +32,21 @@
 #define FWD &kp LG(RBKT)
 #define MISS_CTL &kp LC(UP)
 
+/* overrides */
+/ {
+    chosen {
+        zmk,matrix_transform = &transform_with_encoder;
+    };
+};
+
+&encoder {
+    status = "okay";
+};
+
+&sensors {
+    status = "okay";
+};
+
 / {
     behaviors {
         ht: hold_tap {
@@ -457,7 +472,7 @@
         //│          │          │          │          │          │                      │          │          │          │          │          │
             &none      &none      &none      &none      &none                             &none      &none      &none      &none      &none
         //╰──────────┴──────────┴──────────┼──────────┼──────────┤                      ├──────────┼──────────┼──────────┴──────────┴──────────╯
-                                            &kp C_MUTE &kp C_PP          /*&kp C_PP*/         &none      &none
+                                            &kp C_MUTE &kp C_PP          &kp C_PP         &none      &none
         //                                 ╰──────────┴──────────╯                      ╰──────────┴──────────╯
             >;
             sensor-bindings = <&inc_dec_kp C_NEXT C_PREV>;
@@ -476,7 +491,7 @@
         //│          │          │          │          │          │      │          │          │          │          │          │
             &kp ESC    &none      &leader      &none      &none          &bslsh_enter &kp N1   &two_comma  &three_dot &grv_slsh
         //╰──────────┴──────────┴──────────┼──────────┼──────────┤      ├──────────┼──────────┼──────────┴──────────┴──────────╯
-                                             &kp BSPC    &trans   /*&kp HOME*/  &mins_space   &zero_space
+                                             &kp BSPC    &trans   &kp HOME  &mins_space   &zero_space
         //                                 ╰──────────┴──────────╯      ╰──────────┴──────────╯
             >;
             sensor-bindings = <&inc_dec_kp PG_DN PG_UP>;
@@ -495,7 +510,7 @@
         //│          │          │          │          │          │      │          │          │          │          │          │
             &none      &none      &none      &none      &none              &kp HOME  &kp PG_DN  &kp PG_UP  &kp END  &kp RETURN
         //╰──────────┴──────────┴──────────┼──────────┼──────────┤      ├──────────┼──────────┼──────────┴──────────┴──────────╯
-                                             &none      &kp N     /*MISS_CTL*/  &none      &none
+                                             &none      &kp N     MISS_CTL  &none      &none
         //                                 ╰──────────┴──────────╯      ╰──────────┴──────────╯
             >;
             sensor-bindings = <&inc_dec_kp LG(RBKT) LG(LBKT)>; // TODO why can't I use BACK and FWD here? look into this option:  https://zmk.dev/docs/keymaps/behaviors/sensor-rotate#variable-sensor-rotation
@@ -513,7 +528,7 @@
         //│          │          │          │          │          │      │          │          │          │          │          │
             &none      &none      &none      &none     &kp C_BRI_DN        &none      &kp F1     &kp F2     &kp F3     &kp F10
         //╰──────────┴──────────┴──────────┼──────────┼──────────┤      ├──────────┼──────────┼──────────┴──────────┴──────────╯
-                                             &none      &mo 5     /*&trans*/  &mo 6      &none
+                                             &none      &mo 5     &trans  &mo 6      &none
         //                                 ╰──────────┴──────────╯      ╰──────────┴──────────╯
             >;
             sensor-bindings = <&inc_dec_kp C_BRI_UP C_BRI_DN>;
@@ -532,7 +547,7 @@
         //│          │          │          │          │          │      │          │          │          │          │          │
             &kp ESC    &kp LCTRL  &kp LALT   &kp LGUI   &kp LSHFT       &msc SCRL_LEFT &msc SCRL_DOWN &msc SCRL_UP &msc SCRL_RIGHT &none // TODO try out other options for scrolling
         //╰──────────┴──────────┴──────────┼──────────┼──────────┤      ├──────────┼──────────┼──────────┴──────────┴──────────╯
-                                             &none      &none     /*MISS_CTL*/  &none      &none
+                                             &none      &none     MISS_CTL  &none      &none
         //                                 ╰──────────┴──────────╯      ╰──────────┴──────────╯
             >;
             sensor-bindings = <&inc_dec_kp LC(LEFT) LC(RIGHT)>;
@@ -551,7 +566,7 @@
         //│          │          │          │          │          │      │          │          │          │          │          │
             &none      &none      &none      &none      &bootloader       &none      &none      &none      &none      &none
         //╰──────────┴──────────┴──────────┼──────────┼──────────┤      ├──────────┼──────────┼──────────┴──────────┴──────────╯
-                                             &trans     &trans    /*&bootloader*/ &trans     &trans
+                                             &trans     &trans    &bootloader &trans     &trans
         //                                 ╰──────────┴──────────╯      ╰──────────┴──────────╯
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>; // normally RGB but not on this board
