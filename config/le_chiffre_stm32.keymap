@@ -29,7 +29,7 @@
 #define FWD &kp LG(RBKT)
 #define MISS_CTL &kp LC(UP)
 
-/* overrides */
+/* STM-only overrides begin */
 / {
     chosen {
         zmk,matrix_transform = &transform_with_encoder;
@@ -43,6 +43,7 @@
 &sensors {
     status = "okay";
 };
+/* STM-only overrides end */
 
 / {
     behaviors {
@@ -454,7 +455,7 @@
                                             &lt 5 TAB  &lt 2 BSPC                         &lt 3 SPACE &lt 5 DEL &kp C_MUTE
         //                                 ╰──────────┴──────────╯                      ╰──────────┴──────────╯
             >;
-//            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
+            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
         };
 
         med { // 1
@@ -473,7 +474,7 @@
                                             &kp C_MUTE &kp C_PP                           &none      &none &kp C_PP
         //                                 ╰──────────┴──────────╯                      ╰──────────┴──────────╯
             >;
-//            sensor-bindings = <&inc_dec_kp C_NEXT C_PREV>;
+            sensor-bindings = <&inc_dec_kp C_NEXT C_PREV>;
         };
 
         num { // 2
@@ -492,7 +493,7 @@
                                              &kp BSPC    &trans           &mins_space   &zero_space &kp HOME
         //                                 ╰──────────┴──────────╯      ╰──────────┴──────────╯
             >;
-//            sensor-bindings = <&inc_dec_kp PG_DN PG_UP>;
+            sensor-bindings = <&inc_dec_kp PG_DN PG_UP>;
         };
 
         nav { // 3
@@ -511,7 +512,7 @@
                                              &none      &kp N             &none      &none MISS_CTL
         //                                 ╰──────────┴──────────╯      ╰──────────┴──────────╯
             >;
-//            sensor-bindings = <&inc_dec_kp LG(RBKT) LG(LBKT)>; // TODO why can't I use BACK and FWD here? look into this option:  https://zmk.dev/docs/keymaps/behaviors/sensor-rotate#variable-sensor-rotation
+            sensor-bindings = <&inc_dec_kp LG(RBKT) LG(LBKT)>; // TODO why can't I use BACK and FWD here? look into this option:  https://zmk.dev/docs/keymaps/behaviors/sensor-rotate#variable-sensor-rotation
         };
         fun { // 4
             display-name = "Function";
@@ -529,7 +530,7 @@
                                              &none      &mo 5             &mo 6      &none &trans
         //                                 ╰──────────┴──────────╯      ╰──────────┴──────────╯
             >;
-//            sensor-bindings = <&inc_dec_kp C_BRI_UP C_BRI_DN>;
+            sensor-bindings = <&inc_dec_kp C_BRI_UP C_BRI_DN>;
         };
 
         mse { // 5 // TODO mouse emu isn't going to work on STM at all. Remove this and move base references to fun and med instead?
@@ -548,7 +549,7 @@
                                              &none      &none             &none      &none MISS_CTL
         //                                 ╰──────────┴──────────╯      ╰──────────┴──────────╯
             >;
-//            sensor-bindings = <&inc_dec_kp LC(LEFT) LC(RIGHT)>;
+            sensor-bindings = <&inc_dec_kp LC(LEFT) LC(RIGHT)>;
         };
 
         add { // 6
@@ -567,7 +568,7 @@
                                              &trans     &trans            &trans     &trans &bootloader
         //                                 ╰──────────┴──────────╯      ╰──────────┴──────────╯
             >;
-//            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>; // normally RGB but not on this board
+            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>; // normally RGB but not on this board
         };
     };
 };
