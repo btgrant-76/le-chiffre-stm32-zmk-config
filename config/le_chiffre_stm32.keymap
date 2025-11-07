@@ -92,11 +92,41 @@
 //        };
 
         /* mod-morphs begin */
+        z_esc: z_to_esc {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <Z_HYPR>, <&kp ESC>;
+            mods = <(MOD_RCTL)>;
+        };
+        sls_ent: slash_to_enter {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <SLS_HYPR>, <&kp RETURN>;
+            mods = <(MOD_LCTL)>;
+        };
+        cma_lbkt: comma_to_left_bracket { // this does not work :(
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp LPAR>, <&kp RPAR>;
+            mods = <(MOD_LALT|MOD_RALT)>;
+        };
         cma_lprn: comma_left_paren {
             compatible = "zmk,behavior-mod-morph";
             #binding-cells = <0>;
-            bindings = <&kp COMMA>, <&kp LPAR>;
-            mods = <(MOD_LCTL)>;
+            bindings = <&kp COMMA>, <&cma_lbkt>;
+            mods = <(MOD_LCTL|MOD_RCTL)>;
+        };
+        lbkt_par: left_bracket_to_paren {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp LBKT>, <&kp LPAR>;
+            mods = <(MOD_LCTL|MOD_RCTL)>;
+        };
+        rbkt_par: right_bracket_to_paren {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp RBKT>, <&kp RPAR>;
+            mods = <(MOD_LCTL|MOD_RCTL)>;
         };
         dot_rprn: dot_right_paren {
             compatible = "zmk,behavior-mod-morph";
@@ -367,7 +397,7 @@
             HRML(A,     S,         D,         F)        &kp G                             &kp H      HRMR(J,     K,         L,        SQT)
         //├──────────┼──────────┼──────────┼──────────┼──────────┤                      ├──────────┼──────────┼──────────┼──────────┼──────────┤
         //│  Z       │  X       │  C       │  D       │  V       │                      │  K       │  H       │ , <      │ . >      │ / ?      │
-            Z_HYPR     &kp X       &kp C      &kp V      B_MEH                             N_MEH       &kp M     &cma_lprn &dot_rprn   SLS_HYPR
+            &z_esc     &kp X       &kp C      &kp V      B_MEH                             N_MEH       &kp M     &cma_lprn &dot_rprn   &sls_ent
         //╰──────────┴──────────┴──────────┼──────────┼──────────┤                      ├──────────┼──────────┼──────────┴──────────┴──────────╯
                                             &lt 5 TAB  &lt 2 BSPC                         &lt 3 SPACE &lt 5 DEL &kp C_MUTE
         //                                 ╰──────────┴──────────╯                      ╰──────────┴──────────╯
@@ -424,7 +454,7 @@
             &kp LCTRL  &kp LALT   &kp LGUI   &kp LSHFT  &kp CAPS          &kp LEFT  &kp DOWN   &kp UP     &kp RIGHT  &kp SEMI
         //├──────────┼──────────┼──────────┼──────────┼──────────┤      ├──────────┼──────────┼──────────┼──────────┼──────────┤
         //│          │          │          │          │          │      │          │          │          │          │          │
-            &none      &none      &none      &none      &none              &kp HOME  &kp PG_DN  &kp PG_UP  &kp END  &kp RETURN
+&pair_w_semi LPAR RPAR &pair LBKT RBKT &pair_insert_w_semi LBRC RBRC      &none      &none              &kp HOME  &kp PG_DN  &kp PG_UP  &kp END  &kp RETURN
         //╰──────────┴──────────┴──────────┼──────────┼──────────┤      ├──────────┼──────────┼──────────┴──────────┴──────────╯
                                              &none      &kp N             &none      &none MISS_CTL
         //                                 ╰──────────┴──────────╯      ╰──────────┴──────────╯
