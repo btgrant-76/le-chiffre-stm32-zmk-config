@@ -17,6 +17,22 @@
 #define FWD &kp LG(RBKT)
 #define MISS_CTL &kp LC(UP)
 
+/* base */
+#define Z_HYPR &ht LC(LA(LG(LSHFT))) Z
+#define SLS_HYPR &ht LC(LA(LG(LSHFT))) FSLH
+#define B_MEH &ht LC(LA(LSHFT)) B
+#define N_MEH &ht LC(LA(LSHFT)) N
+
+/* macros */
+#define UNDO_  &kp LG(Z)
+#define CUT_   &kp LG(X)
+#define COPY_  &kp LG(C)
+#define PASTE_ &kp LG(V)
+#define REDO_  &kp LS(LG(Z))
+
+#define TAB_LFT &kp LS(LG(LBKT))
+#define TAB_RGT &kp LS(LG(RBKT))
+
 /* STM-only overrides begin */
 / {
     chosen {
@@ -351,7 +367,7 @@
             HRML(A,     S,         D,         F)        &kp G                             &kp H      HRMR(J,     K,         L,        SQT)
         //├──────────┼──────────┼──────────┼──────────┼──────────┤                      ├──────────┼──────────┼──────────┼──────────┼──────────┤
         //│  Z       │  X       │  C       │  D       │  V       │                      │  K       │  H       │ , <      │ . >      │ / ?      │
-        &ht LC(LA(LG(LSHFT))) Z  &kp X &kp C &kp V &ht LC(LA(LSHFT)) B                  &ht LC(LA(LSHFT)) N &kp M &cma_lprn &dot_rprn &ht LC(LA(LG(LSHFT))) FSLH
+            Z_HYPR     &kp X       &kp C      &kp V      B_MEH                             N_MEH       &kp M     &cma_lprn &dot_rprn   SLS_HYPR
         //╰──────────┴──────────┴──────────┼──────────┼──────────┤                      ├──────────┼──────────┼──────────┴──────────┴──────────╯
                                             &lt 5 TAB  &lt 2 BSPC                         &lt 3 SPACE &lt 5 DEL &kp C_MUTE
         //                                 ╰──────────┴──────────╯                      ╰──────────┴──────────╯
@@ -383,7 +399,7 @@
             bindings = <
         //╭──────────┬──────────┬──────────┬──────────┬──────────╮      ╭──────────┬──────────┬──────────┬──────────┬──────────╮
         //│          │          │          │          │          │      │          │          │          │          │          │
-            &kp LG(Z)  &kp LG(X)  &kp LG(C)  &kp LG(V) &kp LS(LG(Z))      &kp LBKT   &kp N7      &kp N8      &kp N9      &kp RBKT
+            UNDO_       CUT_        COPY_       PASTE_      REDO_              &lbkt_par   &kp N7      &kp N8      &kp N9   &rbkt_par
         //├──────────┼──────────┼──────────┼──────────┼──────────┤      ├──────────┼──────────┼──────────┼──────────┼──────────┤
         //│          │          │          │          │          │      │          │          │          │          │          │
             &kp LCTRL  &kp LALT   &kp LGUI   &kp LSHFT &caps_word         &kp EQUAL  &kp N4     &kp N5     &kp N6     &semi_quot
@@ -402,7 +418,7 @@
             bindings = <
         //╭──────────┬──────────┬──────────┬──────────┬──────────╮      ╭──────────┬──────────┬──────────┬──────────┬──────────╮
         //│          │          │          │          │          │      │          │          │          │          │          │
-      &kp LS(LG(LBKT))  BACK       FWD &kp LS(LG(RBKT)) &up_dir          &kp LS(LG(Z)) &kp LG(V) &kp LG(C) &kp LG(X)  &kp LG(Z)
+             TAB_LFT   BACK        FWD        TAB_RGT  &up_dir            REDO_      PASTE_      COPY_       CUT_        UNDO_
         //├──────────┼──────────┼──────────┼──────────┼──────────┤      ├──────────┼──────────┼──────────┼──────────┼──────────┤
         //│          │          │          │          │          │      │          │          │          │          │          │
             &kp LCTRL  &kp LALT   &kp LGUI   &kp LSHFT  &kp CAPS          &kp LEFT  &kp DOWN   &kp UP     &kp RIGHT  &kp SEMI
@@ -440,7 +456,7 @@
             bindings = <
         //╭──────────┬──────────┬──────────┬──────────┬──────────╮      ╭──────────┬──────────┬──────────┬──────────┬──────────╮
         //│          │          │          │          │          │      │          │          │          │          │          │
-           &kp LG(Z)  &kp LG(X)  &kp LG(C)  &kp LG(V)  &kp LS(LG(Z))      &none      &none      &none      &none      &none
+            UNDO_       CUT_        COPY_       PASTE_      REDO_               &none      &none      &none      &none      &none
         //├──────────┼──────────┼──────────┼──────────┼──────────┤      ├──────────┼──────────┼──────────┼──────────┼──────────┤
         //│          │          │          │          │          │      │          │          │          │          │          │
              &mkp MB5  &mkp MB3   &mkp MB1   &mkp MB2   &none           &mmv MOVE_LEFT &mmv MOVE_DOWN &mmv MOVE_UP &mmv MOVE_RIGHT &none
@@ -459,7 +475,7 @@
             bindings = <
         //╭──────────┬──────────┬──────────┬──────────┬──────────╮      ╭──────────┬──────────┬──────────┬──────────┬──────────╮
         //│          │          │          │          │          │      │          │          │          │          │          │
-          &bt BT_CLR &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &none        &kp LS(LG(Z)) &kp LG(V) &kp LG(C) &kp LG(X)  &kp LG(Z)
+          &bt BT_CLR &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &none          REDO_      PASTE_      COPY_       CUT_        UNDO_
         //├──────────┼──────────┼──────────┼──────────┼──────────┤      ├──────────┼──────────┼──────────┼──────────┼──────────┤
         //│          │          │          │          │          │      │          │          │          │          │          │
             &none      &none      &none      &none      &none              &none      &none      &none      &none      &none
