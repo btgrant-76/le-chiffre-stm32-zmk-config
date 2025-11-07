@@ -17,6 +17,22 @@
 #define FWD &kp LG(RBKT)
 #define MISS_CTL &kp LC(UP)
 
+/* base */
+#define Z_HYPR &ht LC(LA(LG(LSHFT))) Z
+#define SLS_HYPR &ht LC(LA(LG(LSHFT))) FSLH
+#define B_MEH &ht LC(LA(LSHFT)) B
+#define N_MEH &ht LC(LA(LSHFT)) N
+
+/* macros */
+#define UNDO_  &kp LG(Z)
+#define CUT_   &kp LG(X)
+#define COPY_  &kp LG(C)
+#define PASTE_ &kp LG(V)
+#define REDO_  &kp LS(LG(Z))
+
+#define TAB_LFT &kp LS(LG(LBKT))
+#define TAB_RGT &kp LS(LG(RBKT))
+
 /* STM-only overrides begin */
 / {
     chosen {
@@ -35,7 +51,7 @@
 
 / {
     behaviors {
-        lt: layer_tap {
+        lt: layer_tap { // this overrides the built-in layer-tap configuration https://zmk.dev/docs/keymaps/behaviors/hold-tap#custom-hold-tap-examples
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
             flavor = "tap-preferred";
@@ -58,7 +74,6 @@
             flavor = "tap-preferred";
             tapping-term-ms = <105>;
             quick-tap-ms = <220>;
-//            require-prior-idle-ms = <125>; // TODO try removing this or lowering it
             bindings = <&kp>, <&kp>;
         };
         mt: mod_tap {
@@ -77,11 +92,41 @@
 //        };
 
         /* mod-morphs begin */
+        z_esc: z_to_esc {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <Z_HYPR>, <&kp ESC>;
+            mods = <(MOD_RCTL)>;
+        };
+        sls_ent: slash_to_enter {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <SLS_HYPR>, <&kp RETURN>;
+            mods = <(MOD_LCTL)>;
+        };
+        cma_lbkt: comma_to_left_bracket { // this does not work :(
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp LPAR>, <&kp RPAR>;
+            mods = <(MOD_LALT|MOD_RALT)>;
+        };
         cma_lprn: comma_left_paren {
             compatible = "zmk,behavior-mod-morph";
             #binding-cells = <0>;
-            bindings = <&kp COMMA>, <&kp LPAR>;
-            mods = <(MOD_LCTL)>;
+            bindings = <&kp COMMA>, <&cma_lbkt>;
+            mods = <(MOD_LCTL|MOD_RCTL)>;
+        };
+        lbkt_par: left_bracket_to_paren {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp LBKT>, <&kp LPAR>;
+            mods = <(MOD_LCTL|MOD_RCTL)>;
+        };
+        rbkt_par: right_bracket_to_paren {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp RBKT>, <&kp RPAR>;
+            mods = <(MOD_LCTL|MOD_RCTL)>;
         };
         dot_rprn: dot_right_paren {
             compatible = "zmk,behavior-mod-morph";
@@ -170,6 +215,7 @@
             dquote_ins_ls           { sequence = <D Q I>; bindings = <&pair_insert DQT DQT>; };
 
             // HTML tags
+            tag_open_in_ls          { sequence = <T O>; bindings = <&tag_open_insert>; };
             tag_close_in_ls         { sequence = <T C>; bindings = <&tag_close_insert>; };
             tag_void_in_ls          { sequence = <T V>; bindings = <&tag_void_insert>; };
 
@@ -177,7 +223,7 @@
             updir_ls                { sequence = <U D>; bindings = <&up_dir>; };
             js_log_ls               { sequence = <L O G>; bindings = <&js_log>; };
             js_af_ls                { sequence = <A F>; bindings = <&js_arr_fun>; };
-            caps_lock_ls            { sequence = <C L>; bindings = <&kp CAPS>; };
+            caps_lock_ls            { sequence = <C L>; bindings = <&macos_caps>; };
             new_browser_window_ls   { sequence = <N>; bindings = <&new_browser_window>; };
         };
 
@@ -196,30 +242,6 @@
                 bindings = <&mo 1>;
                 layers = <0>;
             };
-            /*
-            combo_esc {
-                timeout-ms = <50>;
-                key-positions = <0 1>;
-                bindings = <&kp ESC>;
-            };
-            combo_del {
-                timeout-ms = <50>;
-                key-positions = <8 9>;
-                bindings = <&kp DEL>;
-            };
-            combo_reset {
-                timeout-ms = <50>;
-                key-positions = <0 9>;
-                layers = <2>;
-                bindings = <&sys_reset>;
-            };
-            combo_boot {
-                timeout-ms = <50>;
-                key-positions = <5 20>;
-                layers = <2>;
-                bindings = <&bootloader>;
-            };
-            */
         };
     };
 
@@ -228,88 +250,52 @@
         up_dir: up_dir {
             #binding-cells = <0>;
             compatible = "zmk,behavior-macro";
-            wait-ms = <40>;
-            tap-ms = <40>;
             bindings = <&kp DOT &kp DOT &kp FSLH>;
         };
         code_fence: code_fence {
             #binding-cells = <0>;
             compatible = "zmk,behavior-macro";
-            wait-ms = <40>;
-            tap-ms = <40>;
-            bindings = <&kp GRAVE &kp GRAVE &kp GRAVE &kp RETURN &kp RETURN &kp GRAVE &kp GRAVE &kp GRAVE &kp UP &kp UP>;
+            bindings = <&kp GRAVE &kp GRAVE &kp GRAVE &kp RETURN &kp RETURN &kp GRAVE &kp GRAVE &kp GRAVE &kp UP &kp UP>; // TODO UP UP or UP LEFT?
         };
         vim_w: vim_write {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            wait-ms = <40>;
-            tap-ms = <40>;
             bindings = <&kp ESC &kp COLON &kp W &kp ENTER>;
         };
         vim_wq: vim_write_and_quit {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            wait-ms = <40>;
-            tap-ms = <40>;
             bindings = <&kp ESC &kp COLON &kp W &kp Q &kp ENTER>;
         };
-//        c_brace_ins: curly_braces_insert { //
-//            compatible = "zmk,behavior-macro";
-//            #binding-cells = <0>;
-//            wait-ms = <40>;
-//            tap-ms = <40>;
-//            bindings = <&kp LBRC &kp RBRC &kp LEFT>; // TODO work up a parameterized version
-//        };
-//        paren_ins: parens_insert {
-//            compatible = "zmk,behavior-macro";
-//            #binding-cells = <0>;
-//            wait-ms = <40>;
-//            tap-ms = <40>;
-//            bindings = <&kp LPAR &kp RPAR &kp LEFT>;
-//        };
         log_out: log_out {
             #binding-cells = <0>;
             compatible = "zmk,behavior-macro";
             wait-ms = <40>;
             tap-ms = <40>;
             bindings =
-                <&macro_press   &kp LGUI>,
-                <&macro_press   &kp LCTRL>,
+                <&macro_press   &kp LCTRL &kp LGUI>,
                 <&macro_tap     &kp Q>,
-                <&macro_release &kp LGUI>,
-                <&macro_release &kp LCTRL>;
+                <&macro_release &kp LCTRL &kp LGUI>;
         };
         scrn2clp: scrn2clp {
             #binding-cells = <0>;
             compatible = "zmk,behavior-macro";
-            wait-ms = <40>;
-            tap-ms = <40>;
             bindings =
-                <&macro_press   &kp LGUI>,
-                <&macro_press   &kp LCTRL>,
-                <&macro_press   &kp LSHFT>,
+                <&macro_press   &kp LGUI &kp LCTRL &kp LSHFT>,
                 <&macro_tap     &kp N4>,
-                <&macro_release &kp LGUI>,
-                <&macro_release &kp LCTRL>,
-                <&macro_release &kp LSHFT>;
+                <&macro_release &kp LGUI &kp LCTRL &kp LSHFT>;
         };
         scrn2fl: scrn2fl {
             #binding-cells = <0>;
             compatible = "zmk,behavior-macro";
-            wait-ms = <40>;
-            tap-ms = <40>;
             bindings =
-                <&macro_press   &kp LGUI>,
-                <&macro_press   &kp LSHFT>,
+                <&macro_press   &kp LGUI &kp LSHFT>,
                 <&macro_tap     &kp N4>,
-                <&macro_release &kp LGUI>,
-                <&macro_release &kp LSHFT>;
+                <&macro_release &kp LGUI &kp LSHFT>;
         };
         pair: pair {
             compatible = "zmk,behavior-macro-two-param";
             #binding-cells = <2>;
-            wait-ms = <40>;
-            tap-ms = <40>;
             bindings = <&macro_param_1to1>,
                        <&kp MACRO_PLACEHOLDER>,
                        <&macro_param_2to1>,
@@ -318,8 +304,6 @@
         pair_insert: pair_insert {
             compatible = "zmk,behavior-macro-two-param";
             #binding-cells = <2>;
-            wait-ms = <40>;
-            tap-ms = <40>;
             bindings = <&macro_param_1to1>,
                        <&kp MACRO_PLACEHOLDER>,
                        <&macro_param_2to1>,
@@ -329,8 +313,6 @@
         pair_w_semi: pair_w_semi {
             compatible = "zmk,behavior-macro-two-param";
             #binding-cells = <2>;
-            wait-ms = <40>;
-            tap-ms = <40>;
             bindings = <&macro_param_1to1>,
                        <&kp MACRO_PLACEHOLDER>,
                        <&macro_param_2to1>,
@@ -340,8 +322,6 @@
         pair_insert_w_semi: pair_insert_w_semi {
             compatible = "zmk,behavior-macro-two-param";
             #binding-cells = <2>;
-            wait-ms = <40>;
-            tap-ms = <40>;
             bindings = <&macro_param_1to1>,
                        <&kp MACRO_PLACEHOLDER>,
                        <&macro_param_2to1>,
@@ -353,8 +333,6 @@
         js_log: javascript_console_log {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-//            wait-ms = <40>;
-            tap-ms = <40>;
             bindings = < &kp C &kp O &kp N &kp S &kp O &kp L &kp E &kp DOT
                          &kp L &kp O &kp G &kp LPAR &kp SQT &kp SQT &kp RPAR &kp SEMI
                          &kp LEFT &kp LEFT &kp LEFT>;
@@ -362,62 +340,38 @@
         js_arr_fun: javascript_arrow_function {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            wait-ms = <40>;
-            tap-ms = <40>;
             bindings = <&kp EQUAL &kp GT &kp SPC &kp LBRC  &kp RBRC
                         &kp LEFT>;
         };
         tag_open_insert:  html_tag_open_insert {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            wait-ms = <40>;
-            tap-ms = <40>;
             bindings = <&kp LT &kp GT &kp LEFT>;
         };
         tag_close_insert: html_tag_close_insert {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            wait-ms = <40>;
-            tap-ms = <40>;
             bindings = <&kp LT &kp FSLH &kp GT &kp LEFT>;
         };
         tag_void_insert: html_tag_void_insert {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            wait-ms = <40>;
-            tap-ms = <40>;
             bindings = <&kp LT &kp SPACE &kp FSLH &kp GT &kp LEFT &kp LEFT &kp LEFT>;
         };
-        new_browser_window: new_browser_window { // TODO test this before committing
+        new_browser_window: new_browser_window {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            wait-ms = <40>;
-            tap-ms = <40>;
-            bindings = <&kp LG(N) &kp LG(T) &kp LG(LBKT) &kp LG(W)>;
-            // SEND_STRING(SS_LGUI("n") SS_DELAY(350) SS_LGUI("t") SS_LGUI("{") SS_LGUI("w"));
+            wait-ms = <400>;
+            bindings = <&kp LG(N)>,
+                       <&macro_wait_time 40>,
+                       <&kp LG(T) &kp LG(LBRC) &kp LG(W)>;
         };
-//        shifted: macro_shifted_kp {
-//            #binding-cells = <1>;
-//            compatible = "zmk,behavior-macro-one-param";
-//            bindings =
-//              <&macro_press &kp LSHFT>,
-//              <&macro_param_1to1 &macro_tap &kp MACRO_PLACEHOLDER>,
-//              <&macro_release &kp LSHFT>;
-//        }; // TODO probably remove this
-//        as: autoshift {
-//            compatible = "zmk,behavior-macro-one-param";
-//            #binding-cells = <1>;
-//            bindings =
-//              <&macro_press>,
-//              <&macro_param_1to1>,
-//              <&macro_param_1to2>,
-//              <&as_ht MACRO_PLACEHOLDER MACRO_PLACEHOLDER>,
-//              <&macro_pause_for_release>,
-//              <&macro_release>,
-//              <&macro_param_1to1>,
-//              <&macro_param_1to2>,
-//              <&as_ht MACRO_PLACEHOLDER MACRO_PLACEHOLDER>;
-//        }; // TODO probably remove this
+        macos_caps: macos_caps_lock {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            tap-ms = <200>; // macOS requires that capslock be held briefly in order to activate
+            bindings = <&kp CAPS>;
+        };
     };
 
     keymap {
@@ -443,7 +397,7 @@
             HRML(A,     S,         D,         F)        &kp G                             &kp H      HRMR(J,     K,         L,        SQT)
         //├──────────┼──────────┼──────────┼──────────┼──────────┤                      ├──────────┼──────────┼──────────┼──────────┼──────────┤
         //│  Z       │  X       │  C       │  D       │  V       │                      │  K       │  H       │ , <      │ . >      │ / ?      │
-        &ht LC(LA(LG(LSHFT))) Z  &kp X &kp C &kp V &ht LC(LA(LSHFT)) B                  &ht LC(LA(LSHFT)) N &kp M &cma_lprn &dot_rprn &ht LC(LA(LG(LSHFT))) FSLH
+            &z_esc     &kp X       &kp C      &kp V      B_MEH                             N_MEH       &kp M     &cma_lprn &dot_rprn   &sls_ent
         //╰──────────┴──────────┴──────────┼──────────┼──────────┤                      ├──────────┼──────────┼──────────┴──────────┴──────────╯
                                             &lt 5 TAB  &lt 2 BSPC                         &lt 3 SPACE &lt 5 DEL &kp C_MUTE
         //                                 ╰──────────┴──────────╯                      ╰──────────┴──────────╯
@@ -475,7 +429,7 @@
             bindings = <
         //╭──────────┬──────────┬──────────┬──────────┬──────────╮      ╭──────────┬──────────┬──────────┬──────────┬──────────╮
         //│          │          │          │          │          │      │          │          │          │          │          │
-            &kp LG(Z)  &kp LG(X)  &kp LG(C)  &kp LG(V) &kp LS(LG(Z))      &kp LBKT   &kp N7      &kp N8      &kp N9      &kp RBKT
+            UNDO_       CUT_        COPY_       PASTE_      REDO_              &lbkt_par   &kp N7      &kp N8      &kp N9   &rbkt_par
         //├──────────┼──────────┼──────────┼──────────┼──────────┤      ├──────────┼──────────┼──────────┼──────────┼──────────┤
         //│          │          │          │          │          │      │          │          │          │          │          │
             &kp LCTRL  &kp LALT   &kp LGUI   &kp LSHFT &caps_word         &kp EQUAL  &kp N4     &kp N5     &kp N6     &semi_quot
@@ -494,7 +448,7 @@
             bindings = <
         //╭──────────┬──────────┬──────────┬──────────┬──────────╮      ╭──────────┬──────────┬──────────┬──────────┬──────────╮
         //│          │          │          │          │          │      │          │          │          │          │          │
-      &kp LS(LG(LBKT))  BACK       FWD &kp LS(LG(RBKT)) &up_dir          &kp LS(LG(Z)) &kp LG(V) &kp LG(C) &kp LG(X)  &kp LG(Z)
+             TAB_LFT   BACK        FWD        TAB_RGT  &up_dir            REDO_      PASTE_      COPY_       CUT_        UNDO_
         //├──────────┼──────────┼──────────┼──────────┼──────────┤      ├──────────┼──────────┼──────────┼──────────┼──────────┤
         //│          │          │          │          │          │      │          │          │          │          │          │
             &kp LCTRL  &kp LALT   &kp LGUI   &kp LSHFT  &kp CAPS          &kp LEFT  &kp DOWN   &kp UP     &kp RIGHT  &kp SEMI
@@ -532,7 +486,7 @@
             bindings = <
         //╭──────────┬──────────┬──────────┬──────────┬──────────╮      ╭──────────┬──────────┬──────────┬──────────┬──────────╮
         //│          │          │          │          │          │      │          │          │          │          │          │
-           &kp LG(Z)  &kp LG(X)  &kp LG(C)  &kp LG(V)  &kp LS(LG(Z))      &none      &none      &none      &none      &none
+            UNDO_       CUT_        COPY_       PASTE_      REDO_               &none      &none      &none      &none      &none
         //├──────────┼──────────┼──────────┼──────────┼──────────┤      ├──────────┼──────────┼──────────┼──────────┼──────────┤
         //│          │          │          │          │          │      │          │          │          │          │          │
              &mkp MB5  &mkp MB3   &mkp MB1   &mkp MB2   &none           &mmv MOVE_LEFT &mmv MOVE_DOWN &mmv MOVE_UP &mmv MOVE_RIGHT &none
@@ -551,7 +505,7 @@
             bindings = <
         //╭──────────┬──────────┬──────────┬──────────┬──────────╮      ╭──────────┬──────────┬──────────┬──────────┬──────────╮
         //│          │          │          │          │          │      │          │          │          │          │          │
-          &bt BT_CLR &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &none        &kp LS(LG(Z)) &kp LG(V) &kp LG(C) &kp LG(X)  &kp LG(Z)
+          &bt BT_CLR &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &none          REDO_      PASTE_      COPY_       CUT_        UNDO_
         //├──────────┼──────────┼──────────┼──────────┼──────────┤      ├──────────┼──────────┼──────────┼──────────┼──────────┤
         //│          │          │          │          │          │      │          │          │          │          │          │
             &none      &none      &none      &none      &none              &none      &none      &none      &none      &none
