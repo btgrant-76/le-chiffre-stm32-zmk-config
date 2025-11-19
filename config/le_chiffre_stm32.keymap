@@ -19,8 +19,19 @@
     chosen {
         zmk,matrix_transform = &transform_with_encoder;
     };
+
+/*
+    encoder {
+        status = "okay";
+    };
+
+    sensors {
+        status = "okay";
+    };
+*/
 };
 
+/*
 &encoder {
     status = "okay";
 };
@@ -28,6 +39,8 @@
 &sensors {
     status = "okay";
 };
+*/
+
 /* STM-only overrides end */
 
 // hold-trigger-key-positions configs https://zmk.dev/docs/keymaps/behaviors/hold-tap?examples=home_row_mods#positional-hold-tap-and-hold-trigger-key-positions

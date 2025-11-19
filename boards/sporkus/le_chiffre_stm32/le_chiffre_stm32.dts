@@ -111,12 +111,14 @@
         a-gpios = <&gpiob 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
         b-gpios = <&gpiob 5 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
 	steps = <30>;
-        status = "disabled";
+        /* status = "disabled"; */
+        status = "okay";
     };
 
     sensors: sensors {
         compatible = "zmk,keymap-sensors";
-        status = "disabled";
+        /* status = "disabled"; */
+        status = "okay";
         sensors = <&encoder>;
 
 	triggers-per-rotation = <15>;
