@@ -15,40 +15,6 @@
 #include <dt-bindings/zmk/pointing.h>
 
 /* STM-only overrides begin */
-/*
-/ {
-    chosen {
-        zmk,matrix_transform = &transform_with_encoder;
-    };
-
-    encoder {
-        status = "okay";
-    };
-
-    sensors {
-        status = "okay";
-    };
-};
-*/
-
-/*
-&encoder {
-    status = "okay";
-};
-
-&sensors {
-    status = "okay";
-};
-*/
-
-&encoder {
-    status = "okay";
-};
-
-&sensors {
-    status = "okay";
-};
-
 / {
     chosen {
         zmk,matrix_transform = &transform_with_encoder;
@@ -56,7 +22,14 @@
     };
 };
 
+&encoder {
+    status = "okay";
+};
 
+&sensors {
+    status = "okay";
+    triggers-per-rotation = <9>;
+};
 /* STM-only overrides end */
 
 // hold-trigger-key-positions configs https://zmk.dev/docs/keymaps/behaviors/hold-tap?examples=home_row_mods#positional-hold-tap-and-hold-trigger-key-positions
